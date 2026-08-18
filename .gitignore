@@ -23,3 +23,10 @@ pgdata/
 # OS Specific
 .DS_Store
 Thumbs.db
+
+# Personal & Local Notes (Private to you)
+MY_LOCAL_NOTES.md
+*PERSONAL*
+*personal*
+*.local.md
+notes/
