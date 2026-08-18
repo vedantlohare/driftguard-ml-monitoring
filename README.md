@@ -179,6 +179,17 @@ As the simulator cycles through traffic patterns, you will observe:
 
 ---
 
+## 🌐 Real-World Data Ingestion (Production Architecture)
+
+While this repository includes a configurable simulation engine (`simulator.py`) for reproducible local benchmarking, the core Kafka stream processor is **100% cloud & enterprise ready** to ingest live traffic feeds:
+
+1. **Payment Gateway Webhooks**: Integrate directly with live Stripe, Adyen, or PayPal webhook endpoints to push incoming transactions directly into the Kafka topic.
+2. **Database Change Data Capture (CDC)**: Connect a **Debezium** connector to tail the production PostgreSQL transaction write-ahead log (WAL) for zero-latency, non-intrusive stream processing.
+3. **Public Fraud Datasets**: Replay real-world historical fraud benchmarks (e.g. IEEE-CIS Fraud Dataset or European Cardholders Dataset) to evaluate drift detection on real data.
+4. **Delayed Chargeback Feedback Loops**: Match 30–90 day delayed bank chargeback dispute feeds by `transaction_id` in PostgreSQL to compute true Concept Drift & ROC-AUC degradation.
+
+---
+
 ## 📖 Deep-Dive Documentation
 For a complete mathematical explanation of **KS-Test**, **Population Stability Index (PSI)**, failure scenarios, and interview talking points:
 👉 **Read the [PROJECT_GUIDE.md](PROJECT_GUIDE.md)**
