@@ -24,6 +24,28 @@ Machine learning models deployed in production fail silently. When upstream data
 
 ---
 
+## 💳 Production Domain: Financial Fraud Detection
+
+In payment processing and financial services, ML models evaluate hundreds of transactions per second to detect fraudulent activity. Fraud detection is notoriously vulnerable to **two major operational risks**:
+
+1. **Adversarial & Behavioral Drift**: Fraudsters rapidly adapt tactics (e.g. testing small amounts, targeting new merchant categories, shifting transaction velocities). If the input distribution changes, the model's false-negative rate spikes, causing direct financial loss.
+2. **Upstream Gateway Corruptions**: Point-of-Sale (POS) updates or third-party banking APIs can introduce schema anomalies (e.g. missing timestamps, negative currency amounts, unexpected category IDs).
+
+### Monitored Feature Space
+
+| Feature | Type | Statistical Test | Business Significance & Validation Rule |
+| :--- | :--- | :--- | :--- |
+| `transaction_amount` | Continuous ($) | **Kolmogorov-Smirnov (KS)** | Validated $> 0$. Detects micro-probing or high-ticket fraud spikes. |
+| `user_age` | Continuous | **Kolmogorov-Smirnov (KS)** | Validated $18 \le \text{age} \le 90$. Detects demographic shifts or synthetic identities. |
+| `user_income` | Continuous ($) | **Kolmogorov-Smirnov (KS)** | Validated $\ge 0$. Detects shifting customer income segments. |
+| `merchant_category` | Categorical | **Population Stability Index (PSI)** | Validated enum `[0..4]`. Detects shifts in merchant sector risk. |
+| `distance_from_home` | Continuous (km) | **Kolmogorov-Smirnov (KS)** | Validated $\ge 0$. Flags unusual geolocation dispersal patterns. |
+| `time_since_last_txn` | Continuous (hrs) | **Kolmogorov-Smirnov (KS)** | Validated $\ge 0$. Detects rapid-fire velocity attacks. |
+
+*The underlying classification model is an **XGBoost Classifier** trained with hyperparameter tuning, achieving a baseline **ROC-AUC of 0.905** on transaction scoring.*
+
+---
+
 ## 🏗️ Architecture & Data Flow
 
 ```
